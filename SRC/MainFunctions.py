@@ -4,7 +4,8 @@ import pandas as pd
 from pandas import json_normalize
 from IPython.display import Image
 from IPython.core.display import HTML 
-
+ 
+ ### Lo primero creo una función para limpiar un poco el CSV
 def cleaning():
     import pandas as pd
     df = pd.read_csv('countriesworld.csv' ,decimal=',', encoding = 'latin1')
@@ -21,32 +22,35 @@ def cleaning():
               'Climate','Agriculture','Service','Industry','Agriculture','Other_percent','Crops_percent'], axis = 1)    
     return df
 
+### Una clase para poder "decorar" los print()
 class color:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
     END = '\033[0m'
 
+### A partir de aquí he creado varias funciones que sacaran datos de la API
+## Capital
 def capital(x):
     url = f"https://restcountries.eu/rest/v2/name/{x}?fullText=true"
     response = requests.get(url)
     data = response.json()
     capital = [x["capital"] for x in data]
     return print(f'Capital:',color.BOLD+capital[0]+color.END)
-
+## Zona Horaria
 def timezone(x):
     url = f"https://restcountries.eu/rest/v2/name/{x}?fullText=true"
     response = requests.get(url)
     data = response.json()
     timezone = [x["timezones"] for x in data]
     return print(f'Time zone:',color.BOLD+timezone[0][0]+color.END)
-
+## Nombre en idioma nativo
 def nativename(x):
     url = f"https://restcountries.eu/rest/v2/name/{x}?fullText=true"
     response = requests.get(url)
     data = response.json()
     results = [x["nativeName"] for x in data]
     return print(f'Native name:',color.BOLD+results[0]+color.END)
-
+## Idiomas oficiales
 def languages(x):
     url = f"https://restcountries.eu/rest/v2/name/{x}?fullText=true"
     response = requests.get(url)
@@ -54,7 +58,7 @@ def languages(x):
     results = [x["languages"] for x in data]
     lang = [x["name"] for x in results[0]]
     return print(f'Language:',color.BOLD+lang[0]+color.END)
-
+## Moneda
 def currencies(x):
     url = f"https://restcountries.eu/rest/v2/name/{x}?fullText=true"
     response = requests.get(url)
@@ -62,27 +66,28 @@ def currencies(x):
     results = [x["currencies"] for x in data]
     curr = [x["name"] for x in results[0]]
     return print(f'Currecy:',color.BOLD+curr[0]+color.END)
-
+## Area en metros cuadrados
 def area(x):
     url = f"https://restcountries.eu/rest/v2/name/{x}?fullText=true"
     response = requests.get(url)
     data = response.json()
     area = [x["area"] for x in data]
     return int(area[0])
-
+## Imagen de la bandera
 def flag(x):
     url = f"https://restcountries.eu/rest/v2/name/{x}?fullText=true"
     response = requests.get(url)
     data = response.json()
     results = [x["flag"] for x in data]
     return Image(url=results[0])
-
+## Por si fuera necerio creo una funcion para sacar toda la información de la API en python
 def api(x):
     url = f"https://restcountries.eu/rest/v2/name/{x}?fullText=true"
     response = requests.get(url)
     results = response.json()
     return results
 
+## FUNCION PRINCIPAL
 def world(x):
     data = cleaning()
     x= x.capitalize()
